@@ -8,20 +8,19 @@ import '../presentation/screens/settings_screen.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: '/calculator',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const TabsScreen(),
+    ShellRoute(
+      builder: (context, state, child) => TabsScreen(child: child),
       routes: [
         GoRoute(
-          path: 'calculator',
+          path: '/calculator',
           builder: (_, __) => const CalculatorScreen(),
         ),
-        GoRoute(path: 'history', builder: (_, __) => const HistoryScreen()),
+        GoRoute(path: '/history', builder: (_, __) => const HistoryScreen()),
         GoRoute(
-          path: 'insights',
+          path: '/insights',
           builder: (_, __) => const InsightsScreen(), // Coming Soon
         ),
-        GoRoute(path: 'settings', builder: (_, __) => const SettingsScreen()),
+        GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
       ],
     ),
   ],
