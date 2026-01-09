@@ -9,10 +9,10 @@ class CalculatorTabBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return TabBar(
-      tabs: [
-        Tab(icon: icons[0], text: texts[0]),
-        Tab(icon: icons[1], text: texts[1]),
-      ],
+      tabs: List.generate(
+        icons.length,
+        (index) => Tab(icon: icons[index], text: texts[index]),
+      ),
     );
   }
 

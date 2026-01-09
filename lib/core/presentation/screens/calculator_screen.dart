@@ -18,7 +18,12 @@ class CalculatorScreen extends StatelessWidget {
             texts: ['Simple - Gross', 'Advanced - + Allowances'],
           ),
         ),
-        body: const Center(child: Text('Calculator Screen Content')),
+        body: const TabBarView(
+          children: [
+            Center(child: Text('Simple - Gross Content')),
+            Center(child: Text('Advanced - + Allowances Content')),
+          ],
+        ),
       ),
     );
   }
