@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:netearn/core/presentation/screens/tabs_screen.dart';
-import '../presentation/screens/calculator_screen.dart';
-import '../presentation/screens/history_screen.dart';
+import '../../features/income_calculator/presentation/screens/calculator_screen.dart';
+import '../../features/calculation_history/presentation/screens/history_screen.dart';
 import '../presentation/screens/insights_screen.dart';
 import '../presentation/screens/settings_screen.dart';
 
