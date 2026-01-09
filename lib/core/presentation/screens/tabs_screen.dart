@@ -19,7 +19,7 @@ class TabsScreen extends StatelessWidget {
         onTap: (index) => context.go(tabs[index]),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.calculate),
+            icon: Icon(Icons.monetization_on),
             label: "Calculator",
           ),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),

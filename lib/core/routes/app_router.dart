@@ -11,10 +11,7 @@ final GoRouter appRouter = GoRouter(
     ShellRoute(
       builder: (context, state, child) => TabsScreen(child: child),
       routes: [
-        GoRoute(
-          path: '/calculator',
-          builder: (_, __) => const CalculatorScreen(),
-        ),
+        GoRoute(path: '/calculator', builder: (_, __) => CalculatorScreen()),
         GoRoute(path: '/history', builder: (_, __) => const HistoryScreen()),
         GoRoute(
           path: '/insights',
