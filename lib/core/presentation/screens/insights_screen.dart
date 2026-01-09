@@ -6,7 +6,7 @@ class InsightsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DefaultAppBar(),
+      appBar: const DefaultAppBar(title: 'Insights', icon: Icons.insights),
       body: const Center(child: Text('Insights Screen Content')),
     );
   }
