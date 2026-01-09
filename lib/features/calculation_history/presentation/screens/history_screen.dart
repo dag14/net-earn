@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netearn/core/widgets/default_appbar.dart';
+import 'package:netearn/features/income_calculator/widgets/default_appbar.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});

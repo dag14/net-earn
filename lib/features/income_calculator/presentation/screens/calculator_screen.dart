@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:netearn/core/widgets/calculator/advanced_calculator.dart';
-import 'package:netearn/core/widgets/calculator/calculator_tapbar.dart';
-import 'package:netearn/core/widgets/calculator/simple_calculator.dart';
-import '../../widgets/default_appbar.dart';
+import 'package:netearn/features/income_calculator/widgets/calculator/advanced_calculator.dart';
+import 'package:netearn/features/income_calculator/widgets/calculator/calculator_tapbar.dart';
+import 'package:netearn/features/income_calculator/widgets/calculator/simple_calculator.dart';
+import '../../../features/income_calculator/widgets/default_appbar.dart';
 
 class CalculatorScreen extends StatelessWidget {
   CalculatorScreen({super.key});
