@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netearn/features/income_calculator/data/local_tax_bracker_provider.dart';
+import 'package:netearn/features/income_calculator/data/local_tax_bracket_provider.dart';
 import 'package:netearn/features/income_calculator/domain/basic_salary_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/advanced_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/calculator_tapbar.dart';

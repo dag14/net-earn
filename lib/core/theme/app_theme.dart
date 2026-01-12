@@ -45,10 +45,9 @@ class AppTheme {
     textTheme: const TextTheme(titleLarge: headline, bodyMedium: body),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.grey,
+      fillColor: Colors.white,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -85,8 +84,7 @@ class AppTheme {
       filled: true,
       fillColor: Color(0xFF2A2A2A),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(

@@ -40,7 +40,9 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             ),
             const SizedBox(height: 16),
             TextField(
-              style: const TextStyle(fontSize: 24),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontSize: 24),
               controller: widget.controller,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
@@ -49,12 +51,8 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                 FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
                 InputFormatter(),
               ],
-              decoration: InputDecoration(
-                fillColor: Colors.white,
+              decoration: const InputDecoration(
                 labelText: 'Enter Gross Salary (ETB)',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
               ),
               // Format while typing (optional)
 
@@ -80,10 +78,9 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             if (_netSalary != null)
               Text(
                 'Net Salary: ${_formatter.format(_netSalary)} ETB',
-                style: const TextStyle(
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
           ],

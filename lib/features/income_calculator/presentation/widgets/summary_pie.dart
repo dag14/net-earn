@@ -48,57 +48,55 @@ class SalarySummaryState extends State<SalarySummary> {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 20.0 : 16.0;
       final radius = isTouched ? 110.0 : 100.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
+      final theme = Theme.of(context);
+      final shadows = [
+        Shadow(color: theme.shadowColor.withOpacity(0.5), blurRadius: 2)
+      ];
+      final textStyle = TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        shadows: shadows,
+      );
+
+      // TODO: For better theme consistency, these colors should be part of your AppTheme.
+      // For example: theme.colorScheme.chartBlue, theme.colorScheme.chartPurple, etc.
+      final pieColors = [
+        Colors.blue,
+        theme.unselectedWidgetColor, // Using a theme-based grey
+        Colors.purple,
+        theme.colorScheme.primary, // Using theme's primary green
+      ];
 
       return switch (i) {
         0 => PieChartSectionData(
-          color: Colors.blue,
-          value: 40,
-          title: '40%',
-          radius: radius,
-          titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffffffff),
-            shadows: shadows,
-          ),
-        ),
+              color: pieColors[0],
+              value: 40,
+              title: '40%',
+              radius: radius,
+              titleStyle: textStyle,
+            ),
         1 => PieChartSectionData(
-          color: Colors.grey,
-          value: 30,
-          title: '30%',
-          radius: radius,
-          titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffffffff),
-            shadows: shadows,
-          ),
-        ),
+              color: pieColors[1],
+              value: 30,
+              title: '30%',
+              radius: radius,
+              titleStyle: textStyle,
+            ),
         2 => PieChartSectionData(
-          color: Colors.purple,
-          value: 16,
-          title: '16%',
-          radius: radius,
-          titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffffffff),
-            shadows: shadows,
-          ),
-        ),
+              color: pieColors[2],
+              value: 16,
+              title: '16%',
+              radius: radius,
+              titleStyle: textStyle,
+            ),
         3 => PieChartSectionData(
-          color: Colors.green,
-          value: 15,
-          title: '15%',
-          radius: radius,
-          titleStyle: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffffffff),
-            shadows: shadows,
-          ),
-        ),
+              color: pieColors[3],
+              value: 15,
+              title: '15%',
+              radius: radius,
+              titleStyle: textStyle,
+            ),
         _ => throw StateError('Invalid'),
       };
     });
