@@ -47,6 +47,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
               ),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
+                InputFormatter(),
               ],
               decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -56,22 +57,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                 ),
               ),
               // Format while typing (optional)
-              onChanged: (value) {
-                if (value.isEmpty) return;
-                final cleanValue = value.replaceAll(',', '');
-                final number = double.tryParse(cleanValue);
-                if (number == null) return;
 
-                final formatted = _formatter.format(number);
-                if (formatted != value) {
-                  widget.controller.value = TextEditingValue(
-                    text: formatted,
-                    selection: TextSelection.collapsed(
-                      offset: formatted.length,
-                    ),
-                  );
-                }
-              },
               // Only calculate when editing is complete
               onEditingComplete: () async {
                 final rawText = widget.controller.text.replaceAll(',', '');
@@ -105,4 +91,60 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
       ),
     );
   }
+}
+
+class InputFormatter extends TextInputFormatter {
+  final NumberFormat _formatter = NumberFormat('#,##0.##');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Allow clearing
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    // Remove commas
+    final newText = newValue.text.replaceAll(',', '');
+
+    // Parse
+    final number = double.tryParse(newText);
+    if (number == null) {
+      return oldValue;
+    }
+
+    final formatted = _formatter.format(number);
+
+    // ---- CURSOR CALCULATION ----
+    final oldSelectionIndex = oldValue.selection.end;
+
+    // Count commas before cursor in old & new text
+    int oldCommasBeforeCursor = _countCommas(
+      oldValue.text.substring(
+        0,
+        oldSelectionIndex.clamp(0, oldValue.text.length),
+      ),
+    );
+
+    int newCommasBeforeCursor = _countCommas(
+      formatted.substring(0, _min(formatted.length, newValue.selection.end)),
+    );
+
+    final cursorOffset =
+        newValue.selection.end +
+        (newCommasBeforeCursor - oldCommasBeforeCursor);
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(
+        offset: cursorOffset.clamp(0, formatted.length),
+      ),
+    );
+  }
+
+  int _countCommas(String text) => ','.allMatches(text).length;
+
+  int _min(int a, int b) => a < b ? a : b;
 }

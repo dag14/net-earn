@@ -4,6 +4,7 @@ import 'package:netearn/features/income_calculator/domain/basic_salary_calculato
 import 'package:netearn/features/income_calculator/presentation/widgets/advanced_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/calculator_tapbar.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/simple_calculator.dart';
+import 'package:netearn/features/income_calculator/presentation/widgets/summary_pie.dart';
 import '../../../../core/presentation/widgets/default_appbar.dart';
 
 class CalculatorScreen extends StatefulWidget {
@@ -44,14 +45,30 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             texts: ['Simple - Gross', 'Advanced - + Allowances'],
           ),
         ),
-        body: TabBarView(
-          children: [
-            SimpleCalculator(
-              controller: controller,
-              calculateNet: (gross) => calculator.calculateNet(gross),
-            ),
-            AdvancedCalculator(),
-          ],
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [],
+          body: Column(
+            children: [
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    SimpleCalculator(
+                      controller: controller,
+                      calculateNet: (gross) => calculator.calculateNet(gross),
+                    ),
+                    AdvancedCalculator(),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SalarySummary(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
