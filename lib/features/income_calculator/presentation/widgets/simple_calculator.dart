@@ -2,24 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class SimpleCalculator extends StatelessWidget {
+class SimpleCalculator extends StatefulWidget {
   final TextEditingController controller;
-  final void Function(double)? onChanged;
+  final Future<double> Function(double gross)? calculateNet;
 
-  SimpleCalculator({super.key, required this.controller, this.onChanged});
+  const SimpleCalculator({
+    super.key,
+    required this.controller,
+    this.calculateNet,
+  });
 
+  @override
+  State<SimpleCalculator> createState() => _SimpleCalculatorState();
+}
+
+class _SimpleCalculatorState extends State<SimpleCalculator> {
   final NumberFormat _formatter = NumberFormat('#,##0.##');
+  double? _netSalary;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(Icons.payment, size: 24),
+                const Icon(Icons.payment, size: 24),
                 const SizedBox(width: 8),
                 Text(
                   'Gross to Net',
@@ -27,15 +38,15 @@ class SimpleCalculator extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             TextField(
-              style: TextStyle(fontSize: 64),
-              controller: controller,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              style: const TextStyle(fontSize: 64),
+              controller: widget.controller,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp(r'[\d.,]'),
-                ), // allow 2 decimal places
+                FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
               ],
               decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -44,37 +55,51 @@ class SimpleCalculator extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
+              // Format while typing (optional)
               onChanged: (value) {
                 if (value.isEmpty) return;
-
-                // Remove commas
                 final cleanValue = value.replaceAll(',', '');
-
                 final number = double.tryParse(cleanValue);
                 if (number == null) return;
 
                 final formatted = _formatter.format(number);
-
-                // Avoid infinite loop
                 if (formatted != value) {
-                  controller.value = TextEditingValue(
+                  widget.controller.value = TextEditingValue(
                     text: formatted,
                     selection: TextSelection.collapsed(
                       offset: formatted.length,
                     ),
                   );
                 }
-                print('Formatted Value: $formatted');
               },
-              onEditingComplete: () {
-                final rawText = controller.text.replaceAll(',', '');
-                final salary = double.tryParse(rawText) ?? 0;
+              // Only calculate when editing is complete
+              onEditingComplete: () async {
+                final rawText = widget.controller.text.replaceAll(',', '');
+                final gross = double.tryParse(rawText) ?? 0;
 
-                if (onChanged != null) {
-                  onChanged!(salary);
+                double net = 0;
+                if (widget.calculateNet != null) {
+                  net = await widget.calculateNet!(gross);
                 }
+
+                setState(() {
+                  _netSalary = net;
+                });
+
+                // Dismiss keyboard
+                FocusScope.of(context).unfocus();
               },
             ),
+            const SizedBox(height: 24),
+            if (_netSalary != null)
+              Text(
+                'Net Salary: ${_formatter.format(_netSalary)} ETB',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
           ],
         ),
       ),

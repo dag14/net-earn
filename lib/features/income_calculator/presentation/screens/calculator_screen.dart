@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:netearn/features/income_calculator/data/local_tax_bracker_provider.dart';
+import 'package:netearn/features/income_calculator/domain/basic_salary_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/advanced_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/calculator_tapbar.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/simple_calculator.dart';
 import '../../../../core/presentation/widgets/default_appbar.dart';
 
-class CalculatorScreen extends StatelessWidget {
-  CalculatorScreen({super.key});
+class CalculatorScreen extends StatefulWidget {
+  const CalculatorScreen({super.key});
 
-  final controller = TextEditingController();
+  @override
+  State<CalculatorScreen> createState() => _CalculatorScreenState();
+}
+
+class _CalculatorScreenState extends State<CalculatorScreen> {
+  late final TextEditingController controller;
+  late final BasicSalaryCalculator calculator;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+    calculator = BasicSalaryCalculator(LocalTaxBracketProvider());
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +48,7 @@ class CalculatorScreen extends StatelessWidget {
           children: [
             SimpleCalculator(
               controller: controller,
-              onChanged: (value) {
-                print('Salary entered: $value');
-              },
+              calculateNet: (gross) => calculator.calculateNet(gross),
             ),
             AdvancedCalculator(),
           ],
