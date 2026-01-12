@@ -49,12 +49,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           headerSliverBuilder: (context, innerBoxIsScrolled) => [],
           body: Column(
             children: [
-              Expanded(
+              SizedBox(
+                height: 260,
                 child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    SimpleCalculator(
-                      controller: controller,
-                    ),
+                    SimpleCalculator(controller: controller),
                     AdvancedCalculator(),
                   ],
                 ),
@@ -62,7 +62,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: SalarySummary(),
                 ),
               ),

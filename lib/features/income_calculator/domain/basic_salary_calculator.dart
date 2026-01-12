@@ -6,7 +6,7 @@ class BasicSalaryCalculator {
 
   BasicSalaryCalculator(this.bracketProvider);
 
-  Future<double> calculateNet(double gross) async {
+  Future<CalculationResult> calculateNet(double gross) async {
     final pension = gross * pensionRate;
     final taxable = gross;
 
@@ -18,8 +18,16 @@ class BasicSalaryCalculator {
     );
 
     final tax = (taxable * bracket.rate) - bracket.deduction;
+    final net = gross - pension - tax;
 
-    return gross - pension - tax;
+    return CalculationResult(
+      gross: gross,
+      pension: pension,
+      taxable: taxable,
+      tax: tax,
+      net: net,
+      bracketRate: bracket.rate,
+    );
   }
 }
 

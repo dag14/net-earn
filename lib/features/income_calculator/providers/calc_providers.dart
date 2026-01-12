@@ -20,8 +20,13 @@ class SimpleCalculatorNotifier extends StateNotifier<List<Calculation>> {
   SimpleCalculatorNotifier(this._calculator) : super([]);
 
   Future<void> calculate(double grossSalary) async {
-    final netSalary = await _calculator.calculateNet(grossSalary);
-    final calculation = SimpleCalculation(grossSalary: grossSalary, netSalary: netSalary);
+    final result = await _calculator.calculateNet(grossSalary);
+    final calculation = SimpleCalculation(
+      grossSalary: grossSalary,
+      netSalary: result.net,
+      pension: result.pension,
+      tax: result.tax,
+    );
     state = [...state, calculation];
   }
 

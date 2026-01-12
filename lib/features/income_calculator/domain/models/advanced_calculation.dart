@@ -6,11 +6,17 @@ class AdvancedCalculation extends Calculation {
   final double housingAllowance;
   @override
   final double netSalary;
+  @override
+  final double pension;
+  @override
+  final double tax;
 
   AdvancedCalculation({
     required this.grossSalary,
     required this.transportAllowance,
     required this.housingAllowance,
     required this.netSalary,
+    required this.pension,
+    required this.tax,
   });
 }
