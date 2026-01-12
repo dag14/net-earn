@@ -40,7 +40,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             ),
             const SizedBox(height: 16),
             TextField(
-              style: const TextStyle(fontSize: 64),
+              style: const TextStyle(fontSize: 24),
               controller: widget.controller,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
@@ -95,7 +95,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
               Text(
                 'Net Salary: ${_formatter.format(_netSalary)} ETB',
                 style: const TextStyle(
-                  fontSize: 32,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
                 ),
