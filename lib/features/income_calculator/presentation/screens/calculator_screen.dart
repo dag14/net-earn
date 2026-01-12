@@ -54,7 +54,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   children: [
                     SimpleCalculator(
                       controller: controller,
-                      calculateNet: (gross) => calculator.calculateNet(gross),
                     ),
                     AdvancedCalculator(),
                   ],

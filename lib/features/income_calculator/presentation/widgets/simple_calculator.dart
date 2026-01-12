@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:netearn/features/income_calculator/providers/calc_providers.dart';
 
-class SimpleCalculator extends StatefulWidget {
+class SimpleCalculator extends ConsumerWidget {
   final TextEditingController controller;
-  final Future<double> Function(double gross)? calculateNet;
 
   const SimpleCalculator({
     super.key,
     required this.controller,
-    this.calculateNet,
   });
 
   @override
-  State<SimpleCalculator> createState() => _SimpleCalculatorState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final NumberFormat formatter = NumberFormat('#,##0.##');
+    final calculation = ref.watch(lastCalculationProvider);
 
-class _SimpleCalculatorState extends State<SimpleCalculator> {
-  final NumberFormat _formatter = NumberFormat('#,##0.##');
-  double? _netSalary;
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
@@ -43,7 +38,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontSize: 24),
-              controller: widget.controller,
+              controller: controller,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
@@ -54,30 +49,22 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
               decoration: const InputDecoration(
                 labelText: 'Enter Gross Salary (ETB)',
               ),
-              // Format while typing (optional)
-
-              // Only calculate when editing is complete
               onEditingComplete: () async {
-                final rawText = widget.controller.text.replaceAll(',', '');
+                final rawText = controller.text.replaceAll(',', '');
                 final gross = double.tryParse(rawText) ?? 0;
 
-                double net = 0;
-                if (widget.calculateNet != null) {
-                  net = await widget.calculateNet!(gross);
-                }
-
-                setState(() {
-                  _netSalary = net;
-                });
+                await ref
+                    .read(simpleCalculatorProvider.notifier)
+                    .calculate(gross);
 
                 // Dismiss keyboard
                 FocusScope.of(context).unfocus();
               },
             ),
             const SizedBox(height: 24),
-            if (_netSalary != null)
+            if (calculation != null)
               Text(
-                'Net Salary: ${_formatter.format(_netSalary)} ETB',
+                'Net Salary: ${formatter.format(calculation.netSalary)} ETB',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontSize: 18,
                   color: Theme.of(context).colorScheme.primary,
@@ -145,3 +132,4 @@ class InputFormatter extends TextInputFormatter {
 
   int _min(int a, int b) => a < b ? a : b;
 }
+
