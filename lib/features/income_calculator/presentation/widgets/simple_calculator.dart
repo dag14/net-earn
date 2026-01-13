@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:netearn/core/theme/app_theme.dart'; // Added import
 import 'package:netearn/features/income_calculator/providers/calc_providers.dart';
 
 class SimpleCalculator extends ConsumerWidget {
@@ -15,9 +16,10 @@ class SimpleCalculator extends ConsumerWidget {
     final calculation = ref.watch(lastCalculationProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+      // padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -55,27 +57,27 @@ class SimpleCalculator extends ConsumerWidget {
               FocusScope.of(context).unfocus();
             },
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 64),
           if (calculation != null) ...[
             Text(
               'Net Salary: ${formatter.format(calculation.netSalary)} ETB',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontSize: 18,
-                color: Theme.of(context).colorScheme.primary,
+                color: AppTheme.success,
               ),
             ),
             Text(
               'Income Tax: ${formatter.format(calculation.tax)} ETB',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontSize: 18,
-                color: Theme.of(context).colorScheme.primary,
+                color: AppTheme.red,
               ),
             ),
             Text(
               'Pension: ${formatter.format(calculation.pension)} ETB',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontSize: 18,
-                color: Theme.of(context).colorScheme.primary,
+                color: AppTheme.blue,
               ),
             ),
           ],

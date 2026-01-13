@@ -1,16 +1,58 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Ethiopian-inspired colors
-  static const Color green = Color(0xFF2E7D32);
-  static const Color yellow = Color(0xFFFBC02D);
+  /* =========================================================
+   * Brand Colors (Inspired by Arsenal Teal Jacket)
+   * ========================================================= */
+
+  // Main Teal Palette
+  static const Color tealDark = Color(0xFF004D40); // Dark teal (jacket body)
+  static const Color teal = Color(0xFF00695C); // Medium teal (primary)
+  static const Color tealLight = Color(
+    0xFF4DB6AC,
+  ); // Light teal (secondary areas)
+
+  // Mint / Pale Green Accent (side panels)
+  static const Color mint = Color(0xFFC8E6C9);
+
+  // Accent color for buttons, highlights
+  static const Color whiteAccent = Colors.white;
+
+  // Accent (retain your amber for contrast)
+  static const Color amber = Color(0xFFFFC107);
+
+  // Status colors
   static const Color red = Color(0xFFD32F2F);
+  static const Color success = Color(0xFF2E7D32);
+  static const Color blue = Color.fromARGB(255, 146, 191, 228);
+  static const Color purple = Color(0xFF6A0DAD);
 
-  // Neutral grays
-  static const Color lightBackground = Color(0xFFFDFDFD);
-  static const Color darkBackground = Color(0xFF121212);
+  /* =========================================================
+   * Light Theme Colors
+   * ========================================================= */
 
-  // Shared text style
+  static const Color lightScaffold = Color(0xFFF9FAFB);
+  static const Color lightSurface = Colors.white;
+
+  static const Color lightTitle = Color(0xFF102A2A);
+  static const Color lightBody = Color(0xFF37474F);
+  static const Color lightHint = Color(0xFF78909C);
+
+  /* =========================================================
+   * Dark Theme Colors
+   * ========================================================= */
+
+  static const Color darkScaffold = Color(0xFF0F1F1E);
+  static const Color darkSurface = Color(0xFF1C2B2A);
+
+  static const Color darkTitle = Color(0xFFE0F2F1);
+  static const Color darkBody = Color(0xFFB2DFDB);
+  static const Color darkHint = Color(0xFF78909C);
+
+  /* =========================================================
+   * Text Styles
+   * ========================================================= */
+
   static const TextStyle headline = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600,
@@ -21,77 +63,117 @@ class AppTheme {
     fontWeight: FontWeight.w400,
   );
 
-  static ThemeData lightTheme = ThemeData(
+  /* =========================================================
+   * Light Theme
+   * ========================================================= */
+
+  static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    scaffoldBackgroundColor: lightBackground,
-    colorScheme: ColorScheme.light(
-      primary: green,
-      secondary: yellow,
+    scaffoldBackgroundColor: lightScaffold,
+
+    colorScheme: const ColorScheme.light(
+      primary: teal, // medium teal as primary
+      secondary: mint, // mint accent for secondary
       error: red,
-      surface: Colors.white,
+      surface: lightSurface,
+      onPrimary: whiteAccent, // text/icons on primary
+      onSecondary: Colors.black,
     ),
+
+    appBarTheme: const AppBarTheme(
+      backgroundColor: lightSurface,
+      foregroundColor: tealDark,
+      elevation: 0,
+      centerTitle: true,
+    ),
+
     cardTheme: CardThemeData(
-      color: Colors.white,
+      color: lightSurface,
       elevation: 1,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
-      elevation: 0,
-      centerTitle: true,
+
+    textTheme: TextTheme(
+      titleLarge: headline.copyWith(color: lightTitle),
+      bodyMedium: body.copyWith(color: lightBody),
     ),
-    textTheme: const TextTheme(titleLarge: headline, bodyMedium: body),
+
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: lightSurface,
+      labelStyle: body.copyWith(color: lightBody),
+      hintStyle: const TextStyle(color: Color(0xFF78909C)),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: teal),
       ),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Colors.white,
-      selectedItemColor: green,
+
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: lightSurface,
+      selectedItemColor: teal,
       unselectedItemColor: Colors.grey,
       type: BottomNavigationBarType.fixed,
+      elevation: 4,
     ),
   );
 
-  static ThemeData darkTheme = ThemeData(
+  /* =========================================================
+   * Dark Theme
+   * ========================================================= */
+
+  static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: darkBackground,
-    colorScheme: ColorScheme.dark(
-      primary: green,
-      secondary: yellow,
+    scaffoldBackgroundColor: darkScaffold,
+
+    colorScheme: const ColorScheme.dark(
+      primary: tealLight, // lighter teal in dark mode
+      secondary: mint, // mint accent in dark mode too
       error: red,
-      surface: Color(0xFF1E1E1E),
+      surface: darkSurface,
+      onPrimary: Color(0xFF00201D),
+      onSecondary: Colors.black,
     ),
+
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF004D40), // dark teal
+      foregroundColor: darkTitle,
+      elevation: 0,
+      centerTitle: true,
+    ),
+
     cardTheme: CardThemeData(
-      color: const Color(0xFF1E1E1E),
+      color: darkSurface,
       elevation: 1,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.white,
-      elevation: 0,
-      centerTitle: true,
-    ),
-    textTheme: const TextTheme(titleLarge: headline, bodyMedium: body),
-    inputDecorationTheme: const InputDecorationTheme(
+
+    inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Color(0xFF2A2A2A),
+      fillColor: Color(0xFF223332),
+      labelStyle: body.copyWith(color: darkBody),
+      hintStyle: TextStyle(color: darkHint),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: tealLight),
+      ),
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Color(0xFF1E1E1E),
-      selectedItemColor: green,
+
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: darkSurface,
+      selectedItemColor: tealLight,
       unselectedItemColor: Colors.grey,
       type: BottomNavigationBarType.fixed,
+      elevation: 4,
     ),
   );
 }

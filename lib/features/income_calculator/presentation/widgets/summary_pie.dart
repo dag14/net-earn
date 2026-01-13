@@ -1,18 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:netearn/core/theme/app_theme.dart'; // Added import
 import 'package:netearn/features/income_calculator/domain/models/advanced_calculation.dart';
 import 'package:netearn/features/income_calculator/domain/models/simple_calculation.dart';
 import 'package:netearn/features/income_calculator/providers/calc_providers.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/indicator.dart';
 
-class AppColors {
-  static const Color contentColorBlue = Color(0xFF2196F3);
-  static const Color contentColorYellow = Color(0xFFFFC300);
-  static const Color contentColorPurple = Color(0xFF6A0DAD);
-  static const Color contentColorGreen = Color(0xFF4CAF50);
-  static const Color mainTextColor1 = Colors.white;
-}
+// Removed AppColors class
 
 class SalarySummary extends ConsumerStatefulWidget {
   const SalarySummary({super.key});
@@ -34,9 +29,9 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
     }
 
     if (calculation is SimpleCalculation) {
-      return _buildSimpleChart(calculation);
+      return _buildSimpleChart(context, calculation); // Added context
     } else if (calculation is AdvancedCalculation) {
-      return _buildAdvancedCharts(calculation);
+      return _buildAdvancedCharts(context, calculation); // Added context
     }
 
     return const Center(
@@ -44,7 +39,11 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
     );
   }
 
-  Widget _buildSimpleChart(SimpleCalculation calculation) {
+  Widget _buildSimpleChart(
+    BuildContext context,
+    SimpleCalculation calculation,
+  ) {
+    // Added context
     final net = calculation.netSalary;
     final pension = calculation.pension;
     final tax = calculation.tax;
@@ -56,72 +55,74 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
       );
     }
 
-    final sections = _buildNetSections(net, pension, tax, total);
+    final sections = _buildNetSections(
+      context,
+      net,
+      pension,
+      tax,
+      total,
+    ); // Added context
 
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(height: 18),
-          Flexible(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!
-                            .touchedSectionIndex;
-                      });
-                    },
-                  ),
-                  borderData: FlBorderData(show: false),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: sections,
-                ),
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: PieChart(
+            PieChartData(
+              pieTouchData: PieTouchData(
+                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                  setState(() {
+                    if (!event.isInterestedForInteractions ||
+                        pieTouchResponse == null ||
+                        pieTouchResponse.touchedSection == null) {
+                      touchedIndex = -1;
+                      return;
+                    }
+                    touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
+                  });
+                },
               ),
+              borderData: FlBorderData(show: false),
+              sectionsSpace: 0,
+              centerSpaceRadius: 40,
+              sections: sections,
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
-              Indicator(
-                color: AppColors.contentColorGreen,
-                text: 'Net',
-                isSquare: true,
-              ),
-              SizedBox(height: 4),
-              Indicator(
-                color: AppColors.contentColorBlue,
-                text: 'Pension',
-                isSquare: true,
-              ),
-              SizedBox(height: 4),
-              Indicator(
-                color: AppColors.contentColorPurple,
-                text: 'Tax',
-                isSquare: true,
-              ),
-              SizedBox(height: 18),
-            ],
-          ),
-          const SizedBox(width: 28),
-        ],
-      ),
+        ),
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.end,
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: const <Widget>[
+        //     Indicator(
+        //       color: AppTheme.success,
+        //       text: 'Net',
+        //       isSquare: true,
+        //     ),
+        //     SizedBox(height: 4),
+        //     Indicator(
+        //       color: AppTheme.blue,
+        //       text: 'Pension',
+        //       isSquare: true,
+        //     ),
+        //     SizedBox(height: 4),
+        //     Indicator(
+        //       color: AppTheme.purple,
+        //       text: 'Tax',
+        //       isSquare: true,
+        //     ),
+        //     SizedBox(height: 18),
+        //   ],
+        // ),
+        // const SizedBox(width: 28),
+      ],
     );
   }
 
-  Widget _buildAdvancedCharts(AdvancedCalculation calculation) {
+  Widget _buildAdvancedCharts(
+    BuildContext context,
+    AdvancedCalculation calculation,
+  ) {
+    // Added context
     final basicSalary =
         calculation.grossSalary -
         calculation.transportAllowance -
@@ -131,6 +132,7 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
       children: [
         Expanded(
           child: _buildGrossChart(
+            context, // Added context
             basicSalary,
             calculation.transportAllowance,
             calculation.housingAllowance,
@@ -138,6 +140,7 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
         ),
         Expanded(
           child: _buildNetChart(
+            context, // Added context
             calculation.netSalary,
             calculation.pension,
             calculation.tax,
@@ -147,141 +150,119 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
     );
   }
 
-  Widget _buildGrossChart(double basic, double transport, double housing) {
+  Widget _buildGrossChart(
+    BuildContext context,
+    double basic,
+    double transport,
+    double housing,
+  ) {
+    // Added context
     final total = basic + transport + housing;
-    final sections = _buildGrossSections(basic, transport, housing, total);
+    final sections = _buildGrossSections(
+      context,
+      basic,
+      transport,
+      housing,
+      total,
+    ); // Added context
 
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(height: 18),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          grossTouchedIndex = -1;
-                          return;
-                        }
-                        grossTouchedIndex = pieTouchResponse
-                            .touchedSection!
-                            .touchedSectionIndex;
-                      });
-                    },
-                  ),
-                  borderData: FlBorderData(show: false),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: sections,
-                ),
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: PieChart(
+            PieChartData(
+              pieTouchData: PieTouchData(
+                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                  setState(() {
+                    if (!event.isInterestedForInteractions ||
+                        pieTouchResponse == null ||
+                        pieTouchResponse.touchedSection == null) {
+                      grossTouchedIndex = -1;
+                      return;
+                    }
+                    grossTouchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
+                  });
+                },
               ),
+              borderData: FlBorderData(show: false),
+              sectionsSpace: 0,
+              // centerSpaceRadius: 40,
+              sections: sections,
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
-              Indicator(
-                color: AppColors.contentColorGreen,
-                text: 'Basic',
-                isSquare: true,
-              ),
-              SizedBox(height: 4),
-              Indicator(
-                color: AppColors.contentColorBlue,
-                text: 'Transport',
-                isSquare: true,
-              ),
-              SizedBox(height: 4),
-              Indicator(
-                color: AppColors.contentColorYellow,
-                text: 'Housing',
-                isSquare: true,
-              ),
-              SizedBox(height: 18),
-            ],
-          ),
-          const SizedBox(width: 28),
-        ],
-      ),
+        ),
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.end,
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: const <Widget>[
+        //     Indicator(
+        //       color: AppTheme.success,
+        //       text: 'Basic',
+        //       isSquare: true,
+        //     ),
+        //     SizedBox(height: 4),
+        //     Indicator(
+        //       color: AppTheme.blue,
+        //       text: 'Transport',
+        //       isSquare: true,
+        //     ),
+        //     SizedBox(height: 4),
+        //     Indicator(
+        //       color: AppTheme.amber,
+        //       text: 'Housing',
+        //       isSquare: true,
+        //     ),
+        //     SizedBox(height: 18),
+        //   ],
+        // ),
+        // const SizedBox(width: 28),
+      ],
     );
   }
 
-  Widget _buildNetChart(double net, double pension, double tax) {
+  Widget _buildNetChart(
+    BuildContext context,
+    double net,
+    double pension,
+    double tax,
+  ) {
+    // Added context
     final total = net + pension + tax;
-    final sections = _buildNetSections(net, pension, tax, total);
+    final sections = _buildNetSections(
+      context,
+      net,
+      pension,
+      tax,
+      total,
+    ); // Added context
 
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(height: 18),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!
-                            .touchedSectionIndex;
-                      });
-                    },
-                  ),
-                  borderData: FlBorderData(show: false),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: sections,
-                ),
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
-              Indicator(
-                color: AppColors.contentColorGreen,
-                text: 'Net',
-                isSquare: true,
-              ),
-              SizedBox(height: 4),
-              Indicator(
-                color: AppColors.contentColorBlue,
-                text: 'Pension',
-                isSquare: true,
-              ),
-              SizedBox(height: 4),
-              Indicator(
-                color: AppColors.contentColorPurple,
-                text: 'Tax',
-                isSquare: true,
-              ),
-              SizedBox(height: 18),
-            ],
-          ),
-          const SizedBox(width: 28),
-        ],
+    return PieChart(
+      PieChartData(
+        pieTouchData: PieTouchData(
+          touchCallback: (FlTouchEvent event, pieTouchResponse) {
+            setState(() {
+              if (!event.isInterestedForInteractions ||
+                  pieTouchResponse == null ||
+                  pieTouchResponse.touchedSection == null) {
+                touchedIndex = -1;
+                return;
+              }
+              touchedIndex =
+                  pieTouchResponse.touchedSection!.touchedSectionIndex;
+            });
+          },
+        ),
+        borderData: FlBorderData(show: false),
+        sectionsSpace: 0,
+        // centerSpaceRadius: 40,
+        sections: sections,
       ),
     );
   }
 
   List<PieChartSectionData> _buildGrossSections(
+    BuildContext context, // Added context
     double basic,
     double transport,
     double housing,
@@ -291,11 +272,13 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
       final isTouched = i == grossTouchedIndex;
       final fontSize = isTouched ? 18.0 : 14.0;
       final radius = isTouched ? 65.0 : 55.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      final textStyle = TextStyle(
+      final shadows = [
+        Shadow(color: Theme.of(context).shadowColor, blurRadius: 2),
+      ];
+      final textStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
         fontSize: fontSize,
         fontWeight: FontWeight.bold,
-        color: AppColors.mainTextColor1,
+        color: Theme.of(context).colorScheme.onSurface,
         shadows: shadows,
       );
 
@@ -306,33 +289,27 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
       switch (i) {
         case 0: // Basic
           return PieChartSectionData(
-            color: AppColors.contentColorGreen,
+            color: AppTheme.success,
             value: basicPercent,
             title: '${basicPercent.toStringAsFixed(0)}%',
             radius: radius,
             titleStyle: textStyle,
-            badgeWidget: Text(basic.toStringAsFixed(2)),
-            badgePositionPercentageOffset: 1.5,
           );
-        case 1: // Transport
+        case 1:
           return PieChartSectionData(
-            color: AppColors.contentColorBlue,
+            color: AppTheme.blue,
             value: transportPercent,
             title: '${transportPercent.toStringAsFixed(0)}%',
             radius: radius,
             titleStyle: textStyle,
-            badgeWidget: Text(transport.toStringAsFixed(2)),
-            badgePositionPercentageOffset: 1.5,
           );
-        case 2: // Housing
+        case 2:
           return PieChartSectionData(
-            color: AppColors.contentColorYellow,
+            color: AppTheme.amber,
             value: housingPercent,
             title: '${housingPercent.toStringAsFixed(0)}%',
             radius: radius,
             titleStyle: textStyle,
-            badgeWidget: Text(housing.toStringAsFixed(2)),
-            badgePositionPercentageOffset: 1.5,
           );
         default:
           throw Error();
@@ -341,6 +318,7 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
   }
 
   List<PieChartSectionData> _buildNetSections(
+    BuildContext context, // Added context
     double net,
     double pension,
     double tax,
@@ -350,11 +328,13 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 18.0 : 14.0;
       final radius = isTouched ? 65.0 : 55.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      final textStyle = TextStyle(
+      final shadows = [
+        Shadow(color: Theme.of(context).shadowColor, blurRadius: 2),
+      ];
+      final textStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
         fontSize: fontSize,
         fontWeight: FontWeight.bold,
-        color: AppColors.mainTextColor1,
+        color: Theme.of(context).colorScheme.onSurface,
         shadows: shadows,
       );
 
@@ -365,33 +345,27 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
       switch (i) {
         case 0: // Net
           return PieChartSectionData(
-            color: AppColors.contentColorGreen,
+            color: AppTheme.success,
             value: netPercent,
             title: '${netPercent.toStringAsFixed(0)}%',
             radius: radius,
             titleStyle: textStyle,
-            badgeWidget: Text(net.toStringAsFixed(2)),
-            badgePositionPercentageOffset: 1.5,
           );
         case 1: // Pension
           return PieChartSectionData(
-            color: AppColors.contentColorBlue,
+            color: AppTheme.blue,
             value: pensionPercent,
             title: '${pensionPercent.toStringAsFixed(0)}%',
             radius: radius,
             titleStyle: textStyle,
-            badgeWidget: Text(pension.toStringAsFixed(2)),
-            badgePositionPercentageOffset: 1.5,
           );
         case 2: // Tax
           return PieChartSectionData(
-            color: AppColors.contentColorPurple,
+            color: AppTheme.red,
             value: taxPercent,
             title: '${taxPercent.toStringAsFixed(0)}%',
             radius: radius,
             titleStyle: textStyle,
-            badgeWidget: Text(tax.toStringAsFixed(2)),
-            badgePositionPercentageOffset: 1.5,
           );
         default:
           throw Error();

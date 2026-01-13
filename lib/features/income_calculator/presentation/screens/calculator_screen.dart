@@ -45,31 +45,30 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             texts: ['Simple - Gross', 'Advanced - + Allowances'],
           ),
         ),
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [],
-          body: Column(
-            children: [
-              SizedBox(
-                height: 260,
-                child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    SimpleCalculator(controller: controller),
-                    AdvancedCalculator(),
-                  ],
-                ),
+        // body: NestedScrollView(
+        //   headerSliverBuilder: (context, innerBoxIsScrolled) => [],
+        body: Column(
+          children: [
+            SizedBox(
+              height: 260,
+              child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  SimpleCalculator(controller: controller),
+                  AdvancedCalculator(),
+                ],
               ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: SalarySummary(),
-                ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: SalarySummary(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+      // ),
     );
   }
 }
