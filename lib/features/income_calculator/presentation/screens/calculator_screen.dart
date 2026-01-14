@@ -3,7 +3,7 @@ import 'package:netearn/features/income_calculator/data/local_tax_bracket_provid
 import 'package:netearn/features/income_calculator/domain/basic_salary_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/advanced_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/calculator_tapbar.dart';
-import 'package:netearn/features/income_calculator/presentation/widgets/simple_calculator.dart';
+import 'package:netearn/features/income_calculator/presentation/widgets/salary_calculator.dart';
 import 'package:netearn/features/income_calculator/presentation/widgets/summary_pie.dart';
 import '../../../../core/presentation/widgets/default_appbar.dart';
 
@@ -54,7 +54,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               child: TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  SimpleCalculator(controller: controller),
+                  SalaryCalculator(controller: controller),
                   AdvancedCalculator(),
                 ],
               ),

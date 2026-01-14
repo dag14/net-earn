@@ -14,10 +14,10 @@ final basicSalaryCalculatorProvider = Provider<BasicSalaryCalculator>((ref) {
   return BasicSalaryCalculator(taxBracketProviderInstance);
 });
 
-class SimpleCalculatorNotifier extends StateNotifier<List<Calculation>> {
+class SalaryCalculatorNotifier extends StateNotifier<List<Calculation>> {
   final BasicSalaryCalculator _calculator;
 
-  SimpleCalculatorNotifier(this._calculator) : super([]);
+  SalaryCalculatorNotifier(this._calculator) : super([]);
 
   Future<void> calculate(double grossSalary) async {
     final result = await _calculator.calculateNet(grossSalary);
@@ -35,18 +35,18 @@ class SimpleCalculatorNotifier extends StateNotifier<List<Calculation>> {
   }
 }
 
-final simpleCalculatorProvider =
-    StateNotifierProvider<SimpleCalculatorNotifier, List<Calculation>>((ref) {
+final salaryCalculatorProvider =
+    StateNotifierProvider<SalaryCalculatorNotifier, List<Calculation>>((ref) {
       final calculator = ref.watch(basicSalaryCalculatorProvider);
-      return SimpleCalculatorNotifier(calculator);
+      return SalaryCalculatorNotifier(calculator);
     });
 
 final calculationHistoryProvider = Provider<List<Calculation>>((ref) {
-  return ref.watch(simpleCalculatorProvider);
+  return ref.watch(salaryCalculatorProvider);
 });
 
 final lastCalculationProvider = Provider<Calculation?>((ref) {
-  final history = ref.watch(simpleCalculatorProvider);
+  final history = ref.watch(salaryCalculatorProvider);
   if (history.isEmpty) {
     return null;
   }
