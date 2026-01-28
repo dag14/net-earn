@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:netearn/core/theme/app_theme.dart'; // Added import
 import 'package:netearn/features/income_calculator/domain/models/advanced_calculation.dart';
-import 'package:netearn/features/income_calculator/domain/models/simple_calculation.dart';
+import 'package:netearn/features/income_calculator/domain/models/salary_calculation.dart';
 import 'package:netearn/features/income_calculator/providers/calc_providers.dart';
-import 'package:netearn/features/income_calculator/presentation/widgets/indicator.dart';
 
 // Removed AppColors class
 
@@ -28,7 +27,7 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
       return const Center(child: Text('Perform a calculation to see summary'));
     }
 
-    if (calculation is SimpleCalculation) {
+    if (calculation is SalaryCalculation) {
       return _buildSimpleChart(context, calculation); // Added context
     } else if (calculation is AdvancedCalculation) {
       return _buildAdvancedCharts(context, calculation); // Added context
@@ -41,7 +40,7 @@ class _SalarySummaryState extends ConsumerState<SalarySummary> {
 
   Widget _buildSimpleChart(
     BuildContext context,
-    SimpleCalculation calculation,
+    SalaryCalculation calculation,
   ) {
     // Added context
     final net = calculation.netSalary;

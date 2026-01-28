@@ -26,6 +26,8 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
   late final FocusNode mobileFocusNode;
   late final FocusNode otherFocusNode;
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +55,7 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
     housingFocusNode.dispose();
     mobileFocusNode.dispose();
     otherFocusNode.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -69,18 +72,22 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
     final other = _parseAmount(otherController);
 
     await ref
-        .read(salaryCalculatorProvider.notifier)
-        .calculate(
-          gross,
-          // fuelAllowance: fuel,
-          // housingAllowance: housing,
-          // mobileAllowance: mobile,
-          // otherAllowances: other,
-        );
+        .read(salaryCalculatorHistoryProvider.notifier)
+        .calculate(gross, fuel, housing, mobile, other);
 
     // Dismiss keyboard
     if (mounted) {
       FocusScope.of(context).unfocus();
+
+      // Scroll to bottom to show results
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (_scrollController.hasClients) {
+        await _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
     }
   }
 
@@ -93,7 +100,9 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Scrollbar(
         thumbVisibility: true,
+        controller: _scrollController,
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -102,14 +111,22 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
                   const Icon(Icons.payment, size: 24),
                   const SizedBox(width: 8),
                   Text(
-                    'Basic Salary',
+                    'Gross to Net',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),
               const SizedBox(height: 16),
 
-              // Gross Salary
+              Text(
+                'Basic Salary',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 12),
+
+              // Basic Salary
               _buildTextField(
                 controller: widget.controller,
                 label: 'Basic Salary (ETB)',
@@ -183,50 +200,50 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
               const SizedBox(height: 32),
 
               // Results
-              if (calculation != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceVariant.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Calculation Results',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      const Divider(height: 24),
-                      _buildResultRow(
-                        context,
-                        'Net Salary',
-                        formatter.format(calculation.netSalary),
-                        AppTheme.success,
-                        isBold: true,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        context,
-                        'Income Tax',
-                        formatter.format(calculation.tax),
-                        AppTheme.red,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        context,
-                        'Pension',
-                        formatter.format(calculation.pension),
-                        AppTheme.blue,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
+              // if (calculation != null) ...[
+              //   Container(
+              //     padding: const EdgeInsets.all(16),
+              //     decoration: BoxDecoration(
+              //       color: Theme.of(
+              //         context,
+              //       ).colorScheme.surfaceVariant.withOpacity(0.3),
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           'Calculation Results',
+              //           style: Theme.of(context).textTheme.titleMedium
+              //               ?.copyWith(fontWeight: FontWeight.w600),
+              //         ),
+              //         const Divider(height: 24),
+              //         _buildResultRow(
+              //           context,
+              //           'Net Salary',
+              //           formatter.format(calculation.netSalary),
+              //           AppTheme.success,
+              //           isBold: true,
+              //         ),
+              //         const SizedBox(height: 12),
+              //         _buildResultRow(
+              //           context,
+              //           'Income Tax',
+              //           formatter.format(calculation.tax),
+              //           AppTheme.red,
+              //         ),
+              //         const SizedBox(height: 12),
+              //         _buildResultRow(
+              //           context,
+              //           'Pension',
+              //           formatter.format(calculation.pension),
+              //           AppTheme.blue,
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   const SizedBox(height: 24),
+              // ],
             ],
           ),
         ),

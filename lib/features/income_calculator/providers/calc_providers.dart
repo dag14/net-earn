@@ -1,31 +1,47 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:netearn/features/income_calculator/data/local_tax_bracket_provider.dart';
-import 'package:netearn/features/income_calculator/domain/basic_salary_calculator.dart';
+import 'package:netearn/features/income_calculator/domain/salary_calculator.dart';
 import 'package:netearn/features/income_calculator/domain/models/calculation.dart';
-import 'package:netearn/features/income_calculator/domain/models/simple_calculation.dart';
+import 'package:netearn/features/income_calculator/domain/models/salary_calculation.dart';
 import 'package:netearn/features/income_calculator/domain/tax_bracket_provider.dart';
 
 final taxBracketProvider = Provider<TaxBracketProvider>((ref) {
   return LocalTaxBracketProvider();
 });
 
-final basicSalaryCalculatorProvider = Provider<BasicSalaryCalculator>((ref) {
+final salaryCalculatorProvider = Provider<SalaryCalculator>((ref) {
   final taxBracketProviderInstance = ref.watch(taxBracketProvider);
-  return BasicSalaryCalculator(taxBracketProviderInstance);
+  return SalaryCalculator(taxBracketProviderInstance);
 });
 
 class SalaryCalculatorNotifier extends StateNotifier<List<Calculation>> {
-  final BasicSalaryCalculator _calculator;
+  final SalaryCalculator _calculator;
 
   SalaryCalculatorNotifier(this._calculator) : super([]);
 
-  Future<void> calculate(double grossSalary) async {
-    final result = await _calculator.calculateNet(grossSalary);
-    final calculation = SimpleCalculation(
-      grossSalary: grossSalary,
+  Future<void> calculate(
+    double basicSalary,
+    double fuelAllowance,
+    double housingAllowance,
+    double mobileAllowance,
+    double otherAllowances,
+  ) async {
+    final result = await _calculator.calculateNet(
+      basicSalary,
+      fuelAllowance,
+      housingAllowance,
+      mobileAllowance,
+      otherAllowances,
+    );
+    final calculation = SalaryCalculation(
+      basicSalary: basicSalary,
       netSalary: result.net,
       pension: result.pension,
       tax: result.tax,
+      gross: result.gross,
+      fuelExempt: result.fuelExempt,
+      taxable: result.taxable,
+      bracketRate: result.bracketRate,
     );
     state = [...state, calculation];
   }
@@ -35,18 +51,18 @@ class SalaryCalculatorNotifier extends StateNotifier<List<Calculation>> {
   }
 }
 
-final salaryCalculatorProvider =
+final salaryCalculatorHistoryProvider =
     StateNotifierProvider<SalaryCalculatorNotifier, List<Calculation>>((ref) {
-      final calculator = ref.watch(basicSalaryCalculatorProvider);
+      final calculator = ref.read(salaryCalculatorProvider);
       return SalaryCalculatorNotifier(calculator);
     });
 
 final calculationHistoryProvider = Provider<List<Calculation>>((ref) {
-  return ref.watch(salaryCalculatorProvider);
+  return ref.watch(salaryCalculatorHistoryProvider);
 });
 
 final lastCalculationProvider = Provider<Calculation?>((ref) {
-  final history = ref.watch(salaryCalculatorProvider);
+  final history = ref.watch(salaryCalculatorHistoryProvider);
   if (history.isEmpty) {
     return null;
   }
