@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:netearn/core/theme/app_theme.dart';
 import 'package:netearn/features/income_calculator/providers/calc_providers.dart';
 
 class SalaryCalculator extends ConsumerStatefulWidget {
@@ -93,9 +92,6 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    final NumberFormat formatter = NumberFormat('#,##0.##');
-    final calculation = ref.watch(lastCalculationProvider);
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Scrollbar(
@@ -285,33 +281,33 @@ class _SalaryCalculatorState extends ConsumerState<SalaryCalculator> {
     );
   }
 
-  Widget _buildResultRow(
-    BuildContext context,
-    String label,
-    String value,
-    Color color, {
-    bool isBold = false,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
-        Text(
-          '$value ETB',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: color,
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w600,
-            fontSize: isBold ? 18 : 16,
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildResultRow(
+  //   BuildContext context,
+  //   String label,
+  //   String value,
+  //   Color color, {
+  //   bool isBold = false,
+  // }) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+  //           fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
+  //         ),
+  //       ),
+  //       Text(
+  //         '$value ETB',
+  //         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+  //           color: color,
+  //           fontWeight: isBold ? FontWeight.w700 : FontWeight.w600,
+  //           fontSize: isBold ? 18 : 16,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
 
 class InputFormatter extends TextInputFormatter {
