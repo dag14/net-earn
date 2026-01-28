@@ -123,7 +123,6 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Calculation Results',
@@ -145,6 +144,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
             'Income Tax',
             formatter.format(tax),
             AppTheme.red,
+            isBold: true,
           ),
           const SizedBox(height: 12),
           _buildResultRow(
@@ -152,6 +152,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
             'Pension',
             formatter.format(pension),
             AppTheme.blue,
+            isBold: true,
           ),
         ],
       ),
@@ -327,6 +328,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
         Text(
           label,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: color.withOpacity(isBold ? 1.0 : 0.85),
             fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
           ),
         ),
