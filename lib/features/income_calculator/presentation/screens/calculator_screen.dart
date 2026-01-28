@@ -287,14 +287,14 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
     });
 
     return DefaultTabController(
-      length: 1,
+      length: 2,
       child: Scaffold(
         appBar: const DefaultAppBar(
           title: 'Salary Calculator',
           icon: Icons.monetization_on,
           bottom: CalculatorTabBar(
-            icons: [Icon(Icons.money)],
-            texts: ['Simple - Gross'],
+            icons: [Icon(Icons.money), Icon(Icons.undo_rounded)],
+            texts: ['Gross - Net', 'Net - Gross'],
           ),
         ),
         body: Column(
